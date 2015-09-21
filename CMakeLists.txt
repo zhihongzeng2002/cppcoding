@@ -1,5 +1,5 @@
 ########################################################################
-# CMake build script for Google Test.  
+# CMake build script for Google Test.   
 #
 # To run the tests for Google Test itself on Linux, use 'make test' or
 # ctest.  You can select which tests to run using 'ctest -R regex'.
