@@ -461,9 +461,11 @@ vector<int> Primitive::generate_primes_from_1_n(int n)
     return result;
 }
 
+// I don't
 vector<int> Primitive::generate_primes_efficient(int n)
 {
-    if (n<=2)throw std::invalid_argument("invalid input");
+    if (n<=1)throw std::invalid_argument("invalid input");
+    if (n==2) return vector<int>(1,2);
 
     int num=floor((n-3)/2)+1;
     vector<int> primes;
@@ -479,9 +481,10 @@ vector<int> Primitive::generate_primes_efficient(int n)
                 is_prime_vect[j]=false;
         }
     }
+    primes;
 }
 
-vector<int> generate_primes_sieveofEratosthenes(int n) {
+vector<int> Primitive::generate_primes_sieveofEratosthenes(int n) {
     if (n<2) throw invalid_argument("invalid input");
     vector<bool> is_prime(n+1, true);
     vector<int> ret;

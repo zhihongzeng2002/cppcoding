@@ -194,6 +194,7 @@ int Search::find_start_circular_sorted_array(const vector<int> &A) {
         else if (A[mid] > A[e])
             s=mid+1;
         else {
+            // it is questionable see page 276
             if (A[s] < A[mid])
                 e=mid-1;
             else

@@ -98,9 +98,9 @@ public:
             return ret;
         }
         void write( const T &t) {
-            if (readPriority==true) {
-                lock_guard<mutex> a(lw);
-            }
+//            if (readPriority==true) {
+//                lock_guard<mutex> a(lw);
+//            }
             {
                 lock_guard<mutex> a(lw);
                 unique_lock<mutex> b(lr);
@@ -171,7 +171,8 @@ public:
     class Blocking_queue {
         mutex m;
         size_t max_size;
-        condition_variable push_cv;
+        condition_variable push_cv; // maybe one condition_variable is enough?
+                                    //No, in push, check push_condition, then notify pop_condition if success.
         condition_variable pop_cv;
         queue<T> q;
 

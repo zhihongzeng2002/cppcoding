@@ -57,7 +57,8 @@ public:
     /// return all the primes between 1 and n
     vector<int> generate_primes_from_1_n(int n);
     bool is_prime(int x);
-    vector<int> generate_primes_efficient(int n);
+    static vector<int> generate_primes_efficient(int n);
+    static vector<int> generate_primes_sieveofEratosthenes(int n);
 
     //14.18
     vector<complex<int> > generate_gaussian_primes(int n);

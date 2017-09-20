@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <time.h>
+#include <stdlib.h>
 
 #include "level.h"
 #include "vehicle.h"
@@ -10,11 +11,12 @@
 class Garage
 {
 public:
+    int count;
     Garage(std::vector<int> & levelNumList, int _minTime, int _maxTime):
         minTime(_minTime), maxTime(_maxTime)
     {
         count = 0;
-        for (std::vector<int>::iterator itr=levelNumList; itr!=levelNumList; itr++)
+        for (std::vector<int>::iterator itr=levelNumList.begin(); itr!=levelNumList.end(); itr++)
         {
             Level x(*itr);
             levelList.push_back(x);
@@ -38,13 +40,12 @@ public:
     {
         Level y = levelList.front();
         Vehicle x = y.removeVehicle();
-        if (x.getID() != -1)
-            delete x;
+//        if (x.getID() != -1)
+//            delete x;
     }
 
 private:
     std::vector<Level> levelList;
-    int count;
     int minTime, maxTime;
 };
 

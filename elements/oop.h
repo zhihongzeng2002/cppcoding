@@ -311,6 +311,46 @@ public:
     //   Read more at: http://phys.org/news/2013-12-facebook-machine.html#jCp
     // Targeted advertising from supermarkets, movie recommendations from Netflix and book suggestions from Amazon are all driven by machine learning models which predict human behaviour
 
+    void Recommendation_system(){
+        /* popularity
+         * new release
+         * content-based recommendation (features from images, including low feature color HOG, high-level feature people car, and other hidden features from unsupervised learning autoencode)
+         * user-dependent classify to find the user interests based on the history
+         * collaborative filtering: traditional (need lots of users and items, clustering user and items)
+         *                  RECONSTRUCTing the utility matrix using the following methods
+         *                  matrix factorization
+         *
+         *
+         *                  unsupervised deep learning:
+         *                  restricted Boltzmann Machines
+         *                  autoencode
+         *                  GAN
+         *
+         *                  supervised deep learning:
+         *                  input: user features, item features which are embedded in the first layers, then combine full connected layer
+         *                  output: 0 or 1 in the utility matrix
+         *
+         * Similary metrics: cosine and Jaccard similarity
+         *
+         */
+    }
+    void Search_system() {
+        /* data structure
+         * efficient search
+         *
+         */
+    }
+    void distributed_file_system(){
+        /* fault-tolerance
+         * hadoop
+         */
+    }
+    void distributed_message_system(){
+        /* how to solve the node of celebrity with dense node
+         *
+         */
+    }
+
 
 };
 

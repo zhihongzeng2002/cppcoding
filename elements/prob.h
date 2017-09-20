@@ -27,6 +27,9 @@ public:
     // problem 2.6
     vector<int> reservoir_sampling(istringstream &s, int k);
 
+    // crack problem 17.11
+    int rand7Fromrand5();
+
 };
 
 #endif // PROB_H

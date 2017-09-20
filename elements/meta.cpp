@@ -849,6 +849,7 @@ vector<string> Meta::generateParentheses(int count) {
     return all;
 }
 
+// does not handle negative
 static int multiply_helper(int a, int b) {
     if (b==0) return 0;
     if (b==1)

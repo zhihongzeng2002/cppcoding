@@ -73,6 +73,7 @@ struct Compare_heap {
     }
 };
 
+// using max_heap to implement a stack (LIFO);
 template<typename T>
 class Stack_heap {
     int idx=0;
@@ -94,6 +95,7 @@ public:
     }
 };
 
+// using max_heap to implement a queue (FIFO)
 template<typename T>
 class Queue_heap {
     int idx=0;

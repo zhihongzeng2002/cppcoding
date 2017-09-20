@@ -436,7 +436,7 @@ int Misc::minRotateSortArray(const vector<int> &a) {
         cout << left << " " << right << endl;
         int mid = left+((right-left) >>1);
         if (a[mid]>a[right])
-            left=mid;
+            left=mid+1;
         else if (a[mid]<a[right])
             right=mid;
         else {

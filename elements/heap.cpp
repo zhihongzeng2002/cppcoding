@@ -181,8 +181,8 @@ vector<Heap::Num> Heap::generate_first_k(int k) {
 }
 
 void Heap::online_median(istringstream &sin) {
-    priority_queue<int, vector<int>, less<int> > L;
-    priority_queue<int, vector<int>, greater<int> > H;
+    priority_queue<int, vector<int>, less<int> > L;//max heap
+    priority_queue<int, vector<int>, greater<int> > H; // min heap
 
     int x;
     while (sin >> x) {
@@ -258,8 +258,10 @@ vector<int> Heap::sort_k_increase_decrease_array(const vector<int> &s) {
     return merge_arrays(ret);
 }
 
+//this is min_heap instead of max_heap
 void Heap::find_kth_largest_stream(istringstream &sin, int k) {
     priority_queue<int, vector<int>, greater<int> > min_heap;
+//    priority_queue<int, vector<int>, less<int> > max_heap;
 
     int buf;
     while (sin >> buf) {
@@ -300,6 +302,7 @@ vector<int> Heap::find_k_closest_median(vector<int> &s, int k) {
 return vector<int>(s.begin(), s.begin()+k);
 }
 
+// using maxheap to keep smallest ones
 vector<Star> find_closest_stars(istringstream &sin, int k) {
     priority_queue<Star> max_heap;
     string line;

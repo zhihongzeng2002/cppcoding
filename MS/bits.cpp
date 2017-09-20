@@ -14,6 +14,7 @@ int Bits::addTwoNum(int x, int carry)
     return addTwoNum(z, high);
 }
 
+// x is positive
 string Bits::convertDecimalToBinary(const double x)
 {
     int intPart = int(x);

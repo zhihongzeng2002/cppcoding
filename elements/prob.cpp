@@ -288,3 +288,15 @@ vector<int> Prob::online_sampling(int n, int k)
 
     return result;
 }
+
+static int rand5() {
+    return 1;
+}
+
+int Prob::rand7Fromrand5(){
+    int x=0;
+    do {
+        x=5*rand5()+rand5();
+    } while (x>20);
+    return x%7;
+}

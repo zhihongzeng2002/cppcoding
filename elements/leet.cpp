@@ -12,6 +12,60 @@
 #include <functional>
 #include <numeric>
 
+void rotateMatrix(vector<vector<int> > & A) {
+    int n = A.size();
+    if (!n || n != A.front().size())
+        throw invalid_argument("empty or not square");
+
+    for (int y=0; y<n/2; y++) {
+        for (int x=y; x<n-1-y; y++) {
+            int temp = A[y][x];
+            A[y][x] = A[n-1-x][y];
+            A[n-1-x][y] = A[n-1-y][n-1-x];
+            A[n-1-y][n-1-x] = A[x][n-1-y];
+            A[x][n-1-y]=temp;
+        }
+    }
+
+}
+
+int search_range(int y, unordered_set<int> &table, bool up) {
+    int res=0;
+    int x = y;
+    while (table.find(x) != table.end()) {
+        res++;
+        if (up)
+            x++;
+        else
+            x--;
+    }
+    return res;
+}
+
+int findLongestContinueSeq(const vector<int> &A) {
+    unordered_set<int> table;
+    for (auto &a: A)
+        table.emplace(a);
+    int maxL =0;
+    unordered_map<int, int> B;
+    for (auto &t: table){
+        if (B.find(t) != B.end())
+            continue;
+        int m = search_range(t+1, table, true);
+        int n = search_range(t-1, table, false);
+        int len = m+n+1;
+        B.emplace(t, len);
+        if (maxL < len)
+            maxL = len;
+        for (int i=0; i<m; i++)
+            B.emplace(t+i, len);
+        for (int i=0; i<n; i++)
+            B.emplace(t-i, len);
+
+    }
+    return maxL;
+}
+
 Leet::Leet()
 {
 }
@@ -272,7 +326,7 @@ void copyGraph_recursive_helper(const shared_ptr<Leet::GNode> &root,
     shared_ptr<Leet::GNode> node(new Leet::GNode(root->data));
     table[root]=node;
     for (auto & e: root->neighbors) {
-        if (table.find(e) != table.end()) {
+        if (table.find(e) == table.end()) {
             copyGraph_recursive_helper(e, table);
         }
         node->neighbors.emplace(table[e]);
@@ -598,10 +652,10 @@ vector<int> Leet::maxSlidingWindow(const vector<int> &A, int w) {
     for (int i=0; i<w ; i++) {
         cout << i << "---" << A[i] << endl;
         seq.push(A[i]);
-        if (q.empty()) {
-            q.push(A[i]);
-            continue;
-        }
+        // if (q.empty()) {
+        //     q.push(A[i]);
+        //     continue;
+        // }
 
         while(!q.empty() && A[i]>q.back()) {
             q.pop();
@@ -631,9 +685,11 @@ vector<int> Leet::maxSlidingWindow(const vector<int> &A, int w) {
 
 }
 
+// cyclic sort list
 void Leet::insertNodeCyclicList(shared_ptr<LNode> &node, int x) {
+    shared_ptr<LNode> xnode(new LNode(x));
     if (!node) {
-        node=shared_ptr<LNode>(new LNode(x));
+        node=xnode;
         return;
     }
 
@@ -646,7 +702,6 @@ void Leet::insertNodeCyclicList(shared_ptr<LNode> &node, int x) {
         prev= curr;
         curr=curr->next;
     }
-    shared_ptr<LNode> xnode(new LNode(x));
     prev->next=xnode;
     xnode->next=curr;
 }
@@ -679,8 +734,20 @@ void Leet::insertNodeCyclicList_2(shared_ptr<LNode> &node, int x) {
     newNode->next = curr;
 }
 
+//void printNodenonCyclicList(shared_ptr<LNode> n) {
+//    while (n) {
+//        cout << n->data << " ";
+//        n=n->next;
+//    }
+//    cout << endl;
+//}
+
 void Leet::printNodeCyclicList(shared_ptr<LNode> n) {
-    while (n) {
+    if (!n) return;
+    cout << n->data << " ";
+    shared_ptr<LNode> pre=n;
+    n=n->next;
+    while (n && n!=pre) {
         cout << n->data << " ";
         n=n->next;
     }
@@ -703,6 +770,7 @@ int Leet::reverseBit(unsigned x) {
     return x;
 }
 
+// 32 bit?
 int Leet::reverseBit_logn(unsigned x) {
     x = (x&0x55555555)<<1 | (x&0xAAAAAAAA) >>1;
     x = (x&0x33333333)<<2 | (x&0xCCCCCCCC) >>2;
@@ -1818,6 +1886,7 @@ struct VectorEqual {
     }
 };
 
+// A is sorted
 unordered_set<pair<int, int>, PairHashCode, PairEqual > twoSum(vector<int> &A, int left, int right, int k) {
     unordered_set<pair<int, int>, PairHashCode, PairEqual > res;
     while (left < right) {
@@ -1856,6 +1925,24 @@ void Leet::threeSum(vector<int> &A) {
         copy(x.begin(), x.end(), ostream_iterator<int>(cout, " "));
         cout << endl;
     }
+}
+
+bool Leet::threeSum_better(vector<int> &A, int k) {
+    unordered_map<int, int> T;
+    for (auto &a: A)
+        T[a]++;
+    for (int i=0;i<A.size()-2; i++) {
+        T[A[i]]--;
+        for (int j=0; j<A.size()-1; j++){
+            T[A[j]]--;
+            int x = k-A[i]-A[j];
+            if (T.find(x)!=T.end() && T[x])
+                return true;
+            T[A[j]]++;
+        }
+        T[A[i]]++;
+    }
+    return false;
 }
 
 void Leet::phoneNumberRepresentation(int digit, string & res) {
@@ -3164,7 +3251,7 @@ shared_ptr<Leet::TNode> Leet::convertSortedArrayToBST(vector<int> &A) {
     return convertSortedArrayToBST_helper(A, 0, A.size());
 }
 
-shared_ptr<Leet::TNode> convertPreorderArrayToBST_helper(vector<int> &A, int idx, int minv, int maxv) {
+shared_ptr<Leet::TNode> convertPreorderArrayToBST_helper(vector<int> &A, int &idx, int minv, int maxv) {
     if (idx==A.size() || A[idx]<minv || A[idx]>maxv)
         return nullptr;
     int curr=A[idx];
@@ -3223,6 +3310,7 @@ vector<vector<int> > Leet::BSTLeverOrderTraversal_reverse(shared_ptr<TNode> &roo
     vector<vector<int> > ret;
     while (!Q.empty()) {
         auto prev= Q;
+        Q=queue<shared_ptr<TNode> >();
         vector<int> tmp;
         while (!prev.empty()) {
             auto top = prev.front();
@@ -3762,6 +3850,7 @@ struct tupleHash {
 
 static bool wordSearch_helper(vector<vector<char> > &A, string &word, int i, int j, int k,
                 unordered_set<vector<int>, tupleHash>& M, vector<vector<bool> > &visited) {
+    if (k==word.size()) return true;
     if (i<0 || i>=A.size() || j<0 || j>=A[i].size()
             || A[i][j]!=word[k] || M.find({i, j, k}) != M.end() || visited[i][j])
         return false;

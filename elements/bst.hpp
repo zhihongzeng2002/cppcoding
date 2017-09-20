@@ -8,6 +8,7 @@
 #include <stack>
 #include <queue>
 
+// see Selftest same problem with better understanding algorithm
 template<typename T>
 void BST<T>::preorder_iterative(const shared_ptr<BSTNode<T> > &root) {
     if (!root) return;
@@ -108,7 +109,7 @@ void BST<T>::printPreOrderWithParentField_norecursive(shared_ptr<BSTNode<T> > &r
         } else if (n->left==prev) {
             next = n->right ? n->right : n->parent;
         } else
-            next = n->right;
+            next = n->parent;
         prev = n;
         n = next;
     }
@@ -356,6 +357,8 @@ TreeNode<T> * build_BST_from_preorder_helper(vector<T> &arr, int s, int e) {
         int idx=s+1;
         while (idx<e && arr[idx]<arr[s])
             idx++;
+//        auto it = upper_bound(arr.begin()+s, arr.begin()+e, arr[s]);
+//        int idx = distance(arr.begin(), it);
 
         return new TreeNode<T>(arr[s], unique_ptr<TreeNode<T> >(build_BST_from_preorder_helper(arr, s+1, idx)),
                                unique_ptr<TreeNode<T> >(build_BST_from_preorder_helper(arr, idx, e)));
@@ -967,7 +970,8 @@ static shared_ptr<BSTNode<T> > buildTreeHelper(const vector<T> &pre, int pre_s, 
                                              buildTreeHelper(pre, pre_s+1, pre_s+1+left_tree_length, in, in_s, in_s+left_tree_length),
                                              buildTreeHelper(pre, pre_s+1+left_tree_length, pre_e, in, distance(in.begin(), t)+1, in_e)));
 
-    }
+    } else
+        return nullptr;
 }
 
 template<typename T>
@@ -978,7 +982,7 @@ shared_ptr<BSTNode<T> > BST<T>::buildTreeFromInorderPreorder(const vector<T> &pr
 template<typename T>
 static shared_ptr<BSTNode<T> > buildTreeHelper_post(const vector<T> &pre, int pre_s, int pre_e,
                                                const vector<T> &in, int in_s, int in_e) {
-    if (pre_e<pre_s && in_e>in_s) {
+    if (pre_e>pre_s && in_e>in_s) {
     auto t = find(in.cbegin()+in_s, in.cend()+in_e, pre[pre_e-1]);
     int left_tree_length = distance(in.cbegin(), t) - in_s;
 
@@ -1045,6 +1049,7 @@ void BST<T>::print_exterior_bst(const shared_ptr<BSTNode<T> > &root) {
     }
 }
 
+// binary tree instead of bst. Check find_LCA in Line 342 for bst solution 
 template<typename T>
 shared_ptr<BSTNode<T> > BST<T>::LCA(shared_ptr<BSTNode<T> > &root, shared_ptr<BSTNode<T> > &a, shared_ptr<BSTNode<T> > &b) {
     if (!root)
@@ -1062,20 +1067,27 @@ shared_ptr<BSTNode<T> > BST<T>::LCA(shared_ptr<BSTNode<T> > &root, shared_ptr<BS
 }
 
 template<typename T>
-static void findPathSum_helper(shared_ptr<BSTNode<T> >&root, T sum, vector<shared_ptr<BSTNode<T> > >&path) {
+static void findPathSum_helper(shared_ptr<BSTNode<T> >&root, T sum, vector<shared_ptr<BSTNode<T> > >&path, T partialSum) {
     if (!root) return;
+
+    partialSum += root->data;
+    if (partialSum==sum) {
+        for (auto &n: path)
+            cout << n->data << ",";
+        cout << endl;
+    }
 
     path.push_back(root);
     // for any start and end
-    T v=0;
-    for (int i=path.size()-1; i>=0; i--) {
-        v += path[i]->data;
-        if (v==sum) { // print
-            for (int k=i; k<path.size(); k++)
-                cout << path[i]->data;
-        }
-        cout << endl;
-    }
+    // T v=0;
+    // for (int i=path.size()-1; i>=0; i--) {
+    //     v += path[i]->data;
+    //     if (v==sum) { // print
+    //         for (int k=i; k<path.size(); k++)
+    //             cout << path[i]->data;
+    //     }
+    //     cout << endl;
+    // }
 
 //---------------- for the path from root
     //    if (sum-root->data==0)  {
@@ -1088,15 +1100,15 @@ static void findPathSum_helper(shared_ptr<BSTNode<T> >&root, T sum, vector<share
 //    findPathSum_helper(root->right, sum-root->data, path);
 //-----------------------------------------
 
-    findPathSum_helper(root->left, sum, path);
-    findPathSum_helper(root->right, sum, path);
+    findPathSum_helper(root->left, sum, path, partialSum);
+    findPathSum_helper(root->right, sum, path, partialSum);
     path.pop_back();
 }
 
 template<typename T>
 list<BSTNode<T> > BST<T>::findPathSum(shared_ptr<BSTNode<T> > &root, T sum) {
     vector<shared_ptr<BSTNode<T> > > path;
-    findPathSum_helper(root, sum, path);
+    findPathSum_helper(root, sum, path, 0);
 }
 
 void LogAnalyzer::popItems(int timestamp) {

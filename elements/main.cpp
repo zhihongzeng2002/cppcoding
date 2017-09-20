@@ -27,6 +27,7 @@
 #include "meta.h"
 #include "prob.h"
 #include "discrete.h"
+#include "selftest.h"
 
 int test_search(int argc, char **argv);
 int test_Primitive(int argc, char ** argv);
@@ -53,6 +54,43 @@ void testHashTables(int argc, char ** argv);
 void testMeta(int argc, char **argv);
 void testProb(int argc, char **argv);
 void testBST(int argc, char ** argv);
+
+// from nutonomy interview
+typedef struct node {
+  int data;
+  shared_ptr<node> left, right;
+} node_t;
+
+// Return a 1 if a value is found, return 0 otherwise
+int search_bst(shared_ptr<node_t> root, int value) {
+if (root==nullptr) return 0;
+if (root->data==value) return 1;
+else if (root->data<value )
+   return search_bst(root->right, value);
+else
+   return search_bst(root->left, value);
+
+
+}
+
+int search_bst_iterative(shared_ptr<node_t> root, int value) {
+shared_ptr<node_t> curr = root;
+while (curr) {
+    if(root->data==value) return 1;
+    else if (root->data < value)
+        curr=curr->right;
+    else
+        curr=curr->left;
+}
+return 0;
+}
+
+void test_find_bst() {
+    TreeN<int> * node = new TreeN<int>;
+    cout << find_bst_recursive(node, 5) << endl;
+    cout << find_bst_iterative(node, 5) << endl;
+    delete node;
+}
 
 class mycomparison
 {
@@ -162,13 +200,195 @@ void testDiscrete(int argc, char ** argv) {
 
 void testConcurrency(int argc, char ** argv) {
     Concurrency t;
-    t.testConsumerProducer();
-//    t.testDataBuff();
+//    t.testConsumerProducer();
+    t.testDataBuff();
+}
+
+void test_findLongestSeq(int argc, char **argv) {
+    vector<int> A;
+    for (int i=1; i<argc; i++)
+        A.emplace_back(atoi(argv[i]));
+    cout << findLongestContinueSeq(A) << endl;
+}
+
+void test_merge_quick_sort(vector<int> &A) {
+//    Heap x;
+//    cout << x.getMedian(A) << endl;
+    cout << Selftest::getMedian(A);
+//    Selftest::SortSmallEqualLarge(A, 5);
+//    Selftest::quickSort(A, 0, A.size()-1);
+//    Selftest::mergeSort(A, 0, A.size()-1);
+//    copy(A.begin(), A.end(), ostream_iterator<int>(cout, " "));
+    cout << endl;
+
+}
+
+/**
+ * @brief find_sub_word
+ * @param s
+ * @param word
+ * @return
+ */
+int find_sub_word(string s, string word) {
+    int count = 0, start = 0;
+    while (true) {
+        size_t found = s.find(word, start);
+        if (found != string::npos) {
+            count++;
+            start = found+word.size();
+        } else
+            break;
+    }
+    return count;
+}
+
+int find_word(string s, string word) {
+    int count = 0, start = 0;
+    string punctuation_space(" `~!@#$%^&*()_+\"=-[]{}|\\;:',.<>/?");
+    while (true) {
+        size_t end = s.find_first_of(punctuation_space, start);
+        if (end != string::npos) {
+            int x = s.compare(max(0, int(end-word.size())), word.size(), word);
+            if (!x) {
+                count++;
+            }
+            start = end+1;
+        } else
+            break;
+    }
+    // for the last word without " " at the end
+    if (s.size()>=word.size()) {
+        if (!s.compare(s.size()-word.size(), word.size(), word))
+            count++;
+    }
+    return count;
+}
+
+int main_vecna_search() {
+  std::string input = "The Dogman was no ordinary dog, nor man, but rather a peculiar dog-like man who barked like a dog, and panted like a dog, he even ate like a dog.  He owned a dog named Doglips, and interestingly enough, his favorite food was hotdogs.dog";
+  std::cout << "Counting dogs (case sensitive):" << endl;
+  cout << input << endl;
+  std::cout << "---The word \"dog\" appears (single word and sub-word like hogdog) " << find_sub_word(input, "dog") << " times." << std::endl;
+  std::cout << "---The word \"dog\" appears as a single word " << find_word(input, "dog") << " times." << std::endl;
+  cout << endl;
+  transform(input.begin(), input.end(), input.begin(), ::tolower);
+  std::cout << "Counting dogs (case insensitive):" << endl;
+  cout << input << endl;
+  std::cout << "---The word \"dog\" appears (single word and sub-word like hogdog) " << find_sub_word(input, "dog") << " times." << std::endl;
+  std::cout << "---The word \"dog\" appears as a single word " << find_word(input, "dog") << " times." << std::endl;
+}
+
+
+int main_vecna_sort() {
+  int unsorted[100] = {};
+  srand (time(NULL));
+  for (int i = 0; i < 100; i++) {
+    unsorted[i] = rand() % 100;
+  }
+  std::cout << "Here are the unsorted numbers:" << std::endl;
+  for (int i = 0; i < 100; i++) {
+    std::cout << unsorted[i] << " ";
+  }
+  std::cout << std::endl;
+//  int sorted[100] = {};
+//  for (int i = 0; i < 100; i++) {
+//    int hi = -1;
+//    int hiIndex = -1;
+//    for (int j = 0; j < 100; j++) {
+//      if (unsorted[j] > hi) {
+//        hi = unsorted[j];
+//        hiIndex = j;
+//      }
+//    }
+//    sorted[i] = hi;
+//    unsorted[hiIndex] = -1;
+//  }
+  Selftest::quickSort(unsorted, 0, 99);
+  std::cout << "Here are the sorted numbers:" << std::endl;
+  for (int i = 0; i < 100; i++) {
+    std::cout << unsorted[i] << " ";
+  }
+  std::cout << std::endl;
+}
+
+void print2D(vector<vector<int> > &a) {
+    for (int i=0; i<a.size(); i++) {
+        for (int j=0; j<a.front().size(); j++) {
+            cout << a[i][j] << " ";
+        }
+        cout << endl;
+    }
+}
+
+int numberOfPaths(vector < vector < int > > a) {
+    print2D(a);
+    if (a.empty() || a[0][0]==0) return 0;
+    vector<vector<int> > B(a.size(), vector<int>(a.front().size(), 0));
+    printf("%d-%d\n", B.size(), B.front().size());
+    B[0][0]=1;
+    print2D(B);
+    for (int i=0; i<a.size(); i++) {
+        for (int j=0; j<a.front().size(); j++) {
+                printf("before %d ", B[i][j]);
+            if (!i && !j) continue;
+            if (a[i][j]==1) {
+                if (i)
+                    B[i][j]+=B[i-1][j];
+                if (j)
+                    B[i][j]+=B[i][j-1];
+//                B[i][j] = i==0?0:B[i-1][j] + j==0?0:B[i][j-1];
+//                printf("%d.%d: %d ",i, j, B[i][j]);
+            }
+//            printf("\n");
+        }
+    }
+    print2D(B);
+    return B.back().back();
+
 }
 
 int main(int argc, char **argv)
 {
-    testConcurrency(argc, argv);
+    vector<vector<int> > B;
+    B.emplace_back(vector<int>(2,1));
+    B.emplace_back(vector<int>(2,1));
+    cout << numberOfPaths(B) << endl;
+//    vector<string> A;
+//    for (int i=1; i<argc; i++) {
+//        A.emplace_back(string(argv[i]));
+//    }
+
+//    Selftest::bigNumberSort(A);
+//    sort(A.begin(), A.end(), [](const string &a, const string &b){ return stoi(a)<stoi(b);});
+//    copy(A.begin(), A.end(), ostream_iterator<string>(cout, " "));
+
+//    auto ans = Selftest::longestSubArrLessK(A, 184);
+//    cout << ans.first << " " << ans.second << endl;
+    //    auto A = Primitive::generate_primes_sieveofEratosthenes(atoi(argv[1]));
+//    copy(A.begin(), A.end(), ostream_iterator<int>(cout, " "));
+//    cout << endl;
+//    Selftest::printUglyNumber(atoi(argv[1]));
+//    cout << Selftest::add_noplus(atoi(argv[1]), atoi(argv[2])) << endl;
+//    Selftest::optimalParse(string(argv[1], )
+//    Selftest::insertBit(atoi(argv[1]), atoi(argv[2]), atoi(argv[3]), atoi(argv[4]));
+//    Selftest::test_sortStack(A);
+//    Selftest::test_reverseList(A);
+//    Selftest::sortPartialSortedArr(A);
+//    copy(A.begin(), A.end(), ostream_iterator<int>(cout, " "));
+//    cout << endl;
+//    auto ans = Selftest::masterMind(string(argv[1]), string(argv[2]));
+//    cout << ans.first << " " << ans.second << endl;
+//    Selftest::printUglyNumber(atoi(argv[1]));
+//    Selftest::longestCommonSubstring(string(argv[1]), string(argv[2]));
+//    Selftest::subArrayGivenSum(A, 7);
+//    cout << Selftest::longestContinousSubArray(A) << endl;
+//    cout << Selftest::maxSubArrSum(A) << endl;
+//    test_merge_quick_sort(A);
+
+
+//    test_findLongestSeq(argc, argv);
+//    test_find_bst();
+//    testConcurrency(argc, argv);
 //    leetTest(argc, argv);
 //    testMeta(argc, argv);
 //    test_Primitive(argc, argv);

@@ -16,7 +16,7 @@ public:
         ID(_ID), status(_status), remainTime(_remainTime) {}
     int getID() const {return ID;}
     Status getStatus() const {return status; }
-    void changeStatus(const _status) { status = _status; }
+    void changeStatus(const Status _status) { status = _status; }
     int getRemainTime()
     {
         if (remainTime) remainTime--;

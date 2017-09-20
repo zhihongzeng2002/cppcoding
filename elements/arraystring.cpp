@@ -153,7 +153,7 @@ int ArrayString::subStringSearch_Rabin_Karp(string &t, string &s)
     int kMod=977;
     int base=26;
 
-    int t_hash=0, s_hash=0, powerS=1;
+    int t_hash=0, s_hash=0, powerS=0;
     for (int i=0; i<s.size(); i++)
     {
         powerS = i ? powerS*base % kMod : 1;
@@ -271,15 +271,15 @@ void ArrayString::convertPhoneNumberToString(string &num, string &s, vector<stri
         result.push_back(s);
         return;
     }
-    vector<string> phonePad;
-    phonePad.push_back("ABC");
-    phonePad.push_back("DEF");
-    phonePad.push_back("GHI");
-    phonePad.push_back("IJL");
-    phonePad.push_back("MNO");
-    phonePad.push_back("PQRS");
-    phonePad.push_back("TUV");
-    phonePad.push_back("WXYZ");
+    vector<string> phonePad({"0", "1", "ABC", "DEF", "GHI", "IJL", "MNO", "PQRS", "TUV","WXYZ" });
+    // phonePad.push_back("ABC");
+    // phonePad.push_back("DEF");
+    // phonePad.push_back("GHI");
+    // phonePad.push_back("IJL");
+    // phonePad.push_back("MNO");
+    // phonePad.push_back("PQRS");
+    // phonePad.push_back("TUV");
+    // phonePad.push_back("WXYZ");
 
     char c=num[s.size()];
     int index=c-'0';
@@ -386,7 +386,7 @@ int ArrayString::maxProfitUnlimitBuySell(const vector<int> &price)
     if (price.size()<2) return 0;
 
     int profit=0, buy=price.front();
-    for (int i=1; i<price.size()-1; i++)
+    for (int i=1; i<price.size()-2; i++)
     {
         if (price[i]>price[i-1] && price[i]>price[i+1]) {
             profit += price[i]-buy;
@@ -431,7 +431,7 @@ pair<int, int> ArrayString::find_longest_increase_subarray(const vector<int> &A)
     if (A.empty()) throw string("invalid input");
     pair<int,int> longest(pair<int, int>(0,0)), curr(longest);
     if (A.size()==1) return longest;
-    int maxLen=1, i=1;
+    int i=1;
     while (i<A.size()) {
         if (A[i]<A[i-1]) {
             curr.first=i;

@@ -49,8 +49,9 @@ shared_ptr<LinkedList::Node> LinkedList::evenOddList2(shared_ptr<Node> head) {
             append_advance(odd, oddtail, head);
         }
     }
-    if (eventail)
-        eventail->next = odd;
+//    if (eventail)
+//        eventail->next = odd;
+    eventail->next = odd;
     if (oddtail) oddtail->next=nullptr;
     return even;
 

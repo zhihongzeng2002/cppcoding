@@ -28,7 +28,7 @@ void Concurrency::Philosopher::wait_for_cmplt() {
 void Concurrency::Philosopher::thread_func() {
 //    void Concurrency::Philosopher::thread_func(shared_ptr<Chopstick> &left, shared_ptr<Chopstick> &right) {
     while (true) {
-        if (try_lock(leftStick->m, rightStick->m)) {
+        if (try_lock(leftStick->m, rightStick->m)==-1) {
                 break;
             }
         this_thread::sleep_for(chrono::milliseconds(100));
@@ -44,7 +44,7 @@ void Concurrency::testDataBuff() {
     vector<thread> tasks;
     DataBuff<int> buf(0);
     for (int i=0; i<arr.size(); i++) {
-        tasks.push_back(thread(&DataBuff<int>::write, ref(buf), arr[i]));
+        tasks.push_back(thread(&DataBuff<int>::write, &buf, arr[i]));
         tasks.push_back(thread(&DataBuff<int>::read, &buf));
     }
     for (auto &x : tasks)

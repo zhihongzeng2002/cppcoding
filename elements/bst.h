@@ -15,6 +15,37 @@
 
 using namespace std;
 
+template<typename T>
+struct TreeN {
+    T data;
+    TreeN<T>* left, *right;
+};
+
+template<typename T>
+bool find_bst_recursive(const TreeN<T> * root, const T value) {
+    if (!root) return false;
+    if (root->data== value) return true;
+    if (root->data > value)
+        find_bst_recursive(root->left, value);
+    else
+        find_bst_recursive(root->right, value);
+}
+
+template<typename T>
+bool find_bst_iterative(TreeN<T> * root, const T value) {
+    if (!root) return false;
+    TreeN<T> * curr = root;
+    while (curr) {
+        if (curr->data == value)
+            return true;
+        else if (curr->data > value)
+            curr = curr->left;
+        else
+            curr = curr->right;
+    }
+    return false;
+}
+
 //vector<complex<int> > generate_gaussian_primes(int n);
 
 struct IntervalNode {

@@ -18,7 +18,28 @@ public:
     T minValue();
     size_t getDataSize(){ return data.size(); }
     static void reverseStack(stack<T> &mystack);
-    static void sortStack(stack<T> & mystack);
+    static void sort_insert(stack<T> &mystack, stack<T> &x){
+        if (mystack.empty()) mystack.push(x);
+        else {
+            stack<T> top = mystack.top();
+            if (top<x) {
+                mystack.pop();
+                sort_insert(mystack, x);
+                mystack.push(top);
+            }
+            else
+                mystack.push(x);
+        }
+    }
+
+    static void sortStack(stack<T> & mystack){
+        if (mystack.empty()) return;
+        T top = mystack.top();
+        mystack.pop();
+        sortStack(mystack);
+        sort_insert(mystack, top);
+    }
+
     static void simulateHanoiTower(const int k);
 
 private:
@@ -28,42 +49,46 @@ private:
 
 };
 
-template <typename T>
-void Stack<T>::sortStack(stack<T> &mystack)
-{
-    if (mystack.empty()) return;
-    stack<T> buff;
-    while(!mystack.empty())
-    {
-        T temp = mystack.top();
-        mystack.pop();
-        while (!buff.empty() && temp< buff.top())
-        {
-            T x = buff.top();
-            buff.pop();
-            mystack.push(x);
-        }
-        buff.push(temp);
+//template<typename T>
+//void Stack<T>::sortStack(stack<T> &mystack) {
+//}
 
-    }
+//template <typename T>
+//void Stack<T>::sortStack(stack<T> &mystack)
+//{
+//    if (mystack.empty()) return;
+//    stack<T> buff;
+//    while(!mystack.empty())
+//    {
+//        T temp = mystack.top();
+//        mystack.pop();
+//        while (!buff.empty() && temp< buff.top())
+//        {
+//            T x = buff.top();
+//            buff.pop();
+//            mystack.push(x);
+//        }
+//        buff.push(temp);
 
-    // reverse
-    while (!buff.empty())
-    {
-        T x = buff.top();
-        buff.pop();
-        mystack.push(x);
-    }
+//    }
 
-    // print
-    while (!mystack.empty())
-    {
-        cout << mystack.top() << ' ';
-        mystack.pop();
-    }
-    cout << endl;
+//    // reverse
+//    while (!buff.empty())
+//    {
+//        T x = buff.top();
+//        buff.pop();
+//        mystack.push(x);
+//    }
 
-}
+//    // print
+//    while (!mystack.empty())
+//    {
+//        cout << mystack.top() << ' ';
+//        mystack.pop();
+//    }
+//    cout << endl;
+
+//}
 
 template <typename T>
 void Stack<T>::reverseStack(stack<T> &mystack)

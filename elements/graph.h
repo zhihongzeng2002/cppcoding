@@ -28,7 +28,7 @@ struct Coord {
         return x != that.x || y != that.y;
     }
     Coord operator+(const Coord & that) const {
-        Coord result(*this);
+        Coord result(*this); // new instance
         result.x += that.x;
         result.y += that.y;
         return result;
@@ -38,7 +38,7 @@ struct Coord {
             x=that.x;
             y=that.y;
         }
-        return *this;
+        return *this; //return the current instance
     }
     Coord & operator+=(const Coord &that) {
         x += that.x;

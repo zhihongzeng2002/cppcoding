@@ -8,14 +8,14 @@
 class Level
 {
 public:
-    Level(const _numLots): numLots(_numLots){}
+    Level(const int _numLots): numLots(_numLots){}
 
     ///add vehicle to the level, return true if success, otherwise false;
     bool addVehicle(const Vehicle x)
     {
         if (vehicleList.size()<numLots)
         {
-            vehicleList.insert(x);
+            vehicleList.push_back(x);
             return true;
         }
         else

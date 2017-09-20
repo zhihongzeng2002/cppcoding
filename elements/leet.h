@@ -12,6 +12,9 @@
 
 using namespace std;
 
+void rotateMatrix(vector<vector<int> > & A);
+int findLongestContinueSeq(const vector<int> &A);
+
 class Leet
 {
 public:
@@ -197,6 +200,7 @@ public:
 
 //    unordered_set<pair<int, int>, PairHashCode, PairEqual >  twoSum(vector<int> &A, int left, int right, int k);
     void threeSum(vector<int> &A);
+    bool threeSum_better(vector<int> &A, int k); // check whether there are two elements sum of which is k. The elements are not unique
     void phoneNumberRepresentation(int digit, string &res);
     shared_ptr<LNode> reverseList_kgroup(shared_ptr<LNode> & head, int k);
     shared_ptr<LNode> buildList(vector<int> &A);

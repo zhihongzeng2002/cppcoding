@@ -106,7 +106,7 @@ void Tree::printSpiralTree()
     stack<shared_ptr<TreeNode> > s0;
     stack<shared_ptr<TreeNode> > s1;
     s0.push(rootNode);
-
+    bool itr=true;
     while (!s0.empty())
     {
         stack<shared_ptr<TreeNode> > temp=s1;
@@ -117,8 +117,14 @@ void Tree::printSpiralTree()
             shared_ptr<TreeNode> node=s1.top();
             s1.pop();
             cout << node->value << " ";
-            if (node->left) s0.push(node->left);
-            if (node->right) s0.push(node->right);
+            if (itr) {
+                if (node->left) s0.push(node->left);
+                if (node->right) s0.push(node->right);
+            } else {
+                if (node->right) s0.push(node->left);
+                if (node->left) s0.push(node->right);
+            }
+            itr = !itr;
         }
         cout << endl;
     }
@@ -152,12 +158,16 @@ static int checkBalanceTree_core(shared_ptr<TreeNode> &node)
     if (!node) return 0;
 
     int leftHeight=checkBalanceTree_core(node->left);
+    if (leftHeight==-1)
+        return -1;
+
     int rightHeight=checkBalanceTree_core(node->right);
+    if (rightHeight==-1)
+        return -1;
 
 //    cout << leftHeight << " " << rightHeight << endl;
 
-    if (leftHeight==-1 || rightHeight==-1) return -1;
-    else if (abs(leftHeight-rightHeight)>1) return -1;
+    if (abs(leftHeight-rightHeight)>1) return -1;
     else
         return max(leftHeight, rightHeight)+1;
 
@@ -234,7 +244,7 @@ shared_ptr<TreeNode> Tree::convertTreeToList2(shared_ptr<TreeNode> rootptr, bool
     if (rootptr->left)
     {
         leftEnd=convertTreeToList2(rootptr->left, false);
-        leftEnd->right=rootptr;
+        if (leftEnd) leftEnd->right=rootptr;
         rootptr->left=leftEnd;
     }
 
@@ -242,7 +252,7 @@ shared_ptr<TreeNode> Tree::convertTreeToList2(shared_ptr<TreeNode> rootptr, bool
     {
         rightStart=convertTreeToList2(rootptr->right, true);
         rootptr->right=rightStart;
-        rightStart->left=rootptr;
+        if (rightStart) rightStart->left=rootptr;
     }
 
     shared_ptr<TreeNode> currentNode=rootptr;
@@ -377,6 +387,7 @@ bool Tree::findNode(shared_ptr<TreeNode> &node, const int x)
 
 }
 
+// best answer is element page 257
 void Tree::findFirstCommonAncestor(shared_ptr<TreeNode> node, const int x, const int y)
 {
     if (!node) return;

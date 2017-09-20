@@ -101,6 +101,14 @@ struct Employee
 
 };
 
+class Director:public Employee {
+public:
+    Director(const string &_name) {
+        name = _name;
+        level = EmployeeLevel::DIRECTOR;
+    }
+};
+
 class CallCenter
 {
     vector<Employee> team;
