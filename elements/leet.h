@@ -264,6 +264,7 @@ public:
     int maxProfit_unlimit(vector<int> &A);
 
     int numDistinctSubsequence(string s, string t);
+    int longestIncreaseSubsequence(const vector<int> &A);
 
     /**
      * @brief Leet::connectLNodeRightNeighbor
@@ -290,6 +291,7 @@ public:
     shared_ptr<TNode> buildTree_LNodeRightNeighbor(const vector<int> &A);
     shared_ptr<TNode> buildTree_LNodeRightNeighbor2(const vector<int> &A);
 
+    void flattenBinaryTree_iterative(const shared_ptr<TNode> &root);
     void flattenBinaryTree(shared_ptr<TNode> &root);
     vector<vector<int> > pathSum2(shared_ptr<TNode> root, int k);
     int minimumDepthBT(shared_ptr<TNode> root);
@@ -318,6 +320,8 @@ public:
     shared_ptr<TNode> buildTreeFromSerializedArray(vector<string> &A);
     vector<vector<int> > BSTLeverOrderTraversal_reverse(shared_ptr<TNode> &root);
 
+    // Given n, how many structurally unique BST's (binary search trees) that store values 1...n?
+    // https://leetcode.com/problems/unique-binary-search-trees/description/
     int uniqueBST(int n);
     vector<shared_ptr<TNode> > uniqueBST2(int n);
 
@@ -354,7 +358,9 @@ public:
     void removeElem(vector<int> &A, int elem);
     void removeDuplicatesArray(vector<int> &A);
     void reverseNodesKGroup(shared_ptr<LNode> &head, int k);
+    void reverseNodesKGroup_2(shared_ptr<LNode> &root, int k);
     void swapNodesInPairs(shared_ptr<LNode> &head);
+    void swapNodesInPairs_2(shared_ptr<LNode> &head);
     bool wordSearch(vector<vector<char> > &A, string word);
 
     shared_ptr<LNode> mergeKList(const vector<shared_ptr<LNode> > &A);

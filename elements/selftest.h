@@ -8,6 +8,7 @@
 #include <string>
 #include <unordered_set>
 #include <stack>
+#include <regex>
 
 using namespace std;
 
@@ -235,8 +236,33 @@ namespace Selftest
 
     // from PathAI
     float TossCoins_kHead(const vector<float> &P, int k);
-    void printBizzBuzzGame(int n);
-    bool meetingConflict(const vector<pair<int, int> > &A);
+    // elememts: 20.8
+    float houseVote_majority(const vector<float> &P);
+    // elements: 17.1
+    long ties_election(const vector<int> &V);
+    void printBizzBuzzGame(int n, int bizz, int buzz);
+    bool meetingConflict(vector<pair<int, int> > &A);
+
+    //    regex. major.minor~beta|alpha|rc[0-9]
+    // 23345.784~beta10 "\d+\.\d+(~(beta|alpha|rc)*\d*)*"
+    bool regexMatch(const string &s, const regex e);
+    void regexSearch(const string &s0, const regex e);
+
+    // a set of runners who start at different places in the line and different speeds, check whether there is any collision at the race, assumming the runners will run forever, and along the line
+    bool collision(vector<pair<int, int> > &A);
+    //    24bit represent red, green, blue, return red, blue, black, white, amigu which is closest to the pixel color
+    void closesetColor(const string pixels);
+
+//    message reassembly
+//    120 bytes long, divide 10 fragments.
+
+//    bool readFragment(uint8_t output_data[16])
+//    bool readMessage(uint8_t output[120]);
+
+    int levinson_dist(string &s, string &t);
+
+    // from google in 10/2017
+    void random_permutation(vector<int> &A);
 }
 
 

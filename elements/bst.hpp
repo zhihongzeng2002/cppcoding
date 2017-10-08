@@ -1040,10 +1040,18 @@ static void print_exterior_right_boundary(const shared_ptr<BSTNode<T> > & n, boo
     }
 }
 
+// note: the original assumption in the element book is that there is left and right leave at the root. Add the following lines to get rid of the assumption
 template<typename T>
 void BST<T>::print_exterior_bst(const shared_ptr<BSTNode<T> > &root) {
     if (root) {
         cout << root->data << " ";
+        // if root left or right leave is nullptr, go to next layer until both left and right leave are not nullptr
+        if (!root->left || !root->right) {
+            if (root->left) print_exterior_bst(root->left);
+            else
+                print_exterior_bst(root->right);
+            return;
+        }
         print_exterior_left_boundary(root->left, true);
         print_exterior_right_boundary(root->right, true);
     }

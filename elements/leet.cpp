@@ -42,6 +42,7 @@ int search_range(int y, unordered_set<int> &table, bool up) {
     return res;
 }
 
+// see another better solution
 int findLongestContinueSeq(const vector<int> &A) {
     unordered_set<int> table;
     for (auto &a: A)
@@ -114,7 +115,7 @@ for (int i=0; i<A.size(); i++) {
     if (i==0)
         curr=x;
     else {
-        if (x.low<curr.high && x.high>curr.high)
+        if (x.low<curr.high && x.high>curr.low)
             curr.high=x.high;
         else {
             ret.push_back(curr);
@@ -407,10 +408,11 @@ string palindromStr_helper(string &s, int left, int right) {
     }
     left++;
     right--;
-    if (left<=right)
-        return s.substr(left, right-left+1);
-    else
-        return string();
+    return s.substr(left, right-left+1);
+//    if (left<=right)
+//        return s.substr(left, right-left+1);
+//    else
+//        return string();
 }
 
 string palindromStr(string &s, int i) {
@@ -503,7 +505,7 @@ int Leet::findLargestPalindromicSubstr_DP(string s) {
 
 int Leet::distanceMaximum(const vector<int> &A) {
     if (A.size()<=1)
-        throw invalid_argument("there is only one element");
+        throw invalid_argument("there is less than one element");
 
     stack<pair<int, int> > q;
     for (int i=0; i<A.size(); i++) {
@@ -646,7 +648,7 @@ int Leet::paintersPartition_efficient(const vector<int> &A, int k) {
 vector<int> Leet::maxSlidingWindow(const vector<int> &A, int w) {
     if (A.size()<w)
         throw invalid_argument("A size is smaller that window size");
-    queue<int> q;
+    deque<int> q;
     queue<int> seq;
 
     for (int i=0; i<w ; i++) {
@@ -658,9 +660,9 @@ vector<int> Leet::maxSlidingWindow(const vector<int> &A, int w) {
         // }
 
         while(!q.empty() && A[i]>q.back()) {
-            q.pop();
+            q.pop_back();
         }
-        q.push(A[i]);
+        q.push_back(A[i]);
     }
     cout << seq.size() << " " << q.size() << endl;
 
@@ -668,15 +670,15 @@ vector<int> Leet::maxSlidingWindow(const vector<int> &A, int w) {
     B.push_back(q.front());
     for (int i=w; i<A.size(); i++) {
         if (seq.front()==q.front()) {
-            q.pop();
+            q.pop_front();
         }
         seq.pop();
         seq.push(A[i]);
 
         while(!q.empty() && A[i]>q.back()) {
-            q.pop();
+            q.pop_back();
         }
-        q.push(A[i]);
+        q.push_back(A[i]);
         B.push_back(q.front());
         cout << i << "->" << q.front() << endl;
     }
@@ -944,8 +946,8 @@ shared_ptr<Leet::TNode> Leet::buildTreeFromInorderPostorder(const vector<int> &i
 }
 
 bool Leet::CheckRectangleOverlap(RectangleLeet &a, RectangleLeet &b) {
-    return (a.start.x+a.width >= b.start.x || b.start.x+b.width >= a.start.x)
-            && (a.start.y+a.height >= b.start.y || b.start.y+b.height >= a.start.y);
+    return (a.start.x+a.width >= b.start.x && b.start.x+b.width >= a.start.x)
+            && (a.start.y+a.height >= b.start.y && b.start.y+b.height >= a.start.y);
 }
 
 int Leet::findKsmallestUnion_log(int A[], int m, int B[], int n, int k) {
@@ -1190,7 +1192,7 @@ int Leet::maxPointsInLine_efficient(const vector<PointA> &A) {
 }
 
 static void splitList(Leet::lnode *head, Leet::lnode**a, Leet::lnode **b) {
-    if (!head || !head->next) {
+    if (!head ) {
         *a=head;
         *b=nullptr;
     }
@@ -1517,16 +1519,22 @@ void Leet::recoverBST_constSpace(shared_ptr<TNode> &root) {
 
 static void recoverBST_efficient_helper(shared_ptr<Leet::TNode> &curr, shared_ptr<Leet::TNode> & prev, shared_ptr<Leet::TNode> &first, shared_ptr<Leet::TNode> &second) {
     if (!curr)return;
-    recoverBST_efficient_helper(curr->left, curr, first, second);
-    if (curr->data<prev->data) {
-        if (!first)
-            first = prev;
-        else {
-            second = curr;
-            return;
+    recoverBST_efficient_helper(curr->left, prev, first, second);
+    if (!prev)
+        prev = curr;
+    else {
+        if (curr->data<prev->data) {
+            if (!first) {
+                first = prev;
+            }
+            else {
+                second = curr;
+                return;
+            }
         }
+        prev = curr;
     }
-    recoverBST_efficient_helper(curr->right, curr, first, second);
+    recoverBST_efficient_helper(curr->right, prev, first, second);
 }
 
 // observation: inorder visit, find curr>prev, and first mistake is prev, and second mistake is curr;
@@ -1999,7 +2007,7 @@ shared_ptr<Leet::LNode> Leet::reverseList_recursive(shared_ptr<Leet::LNode> & he
     if (!head || !head->next)
         return head;
     shared_ptr<Leet::LNode> node = reverseList_recursive(head->next);
-    head->next->next = head;
+    node->next = head;
     head->next = nullptr;
     return node;
 }
@@ -2200,6 +2208,7 @@ string Leet::longestValidParentheses(string s) {
     return s.substr(res.first, res.second-res.first+1);
 }
 
+// I think this is the best one
 int Leet::longestValidParentheses2(string s) {
     int curr=0, ret=0, cont=0;
     for (auto &c: s) {
@@ -3000,7 +3009,7 @@ int Leet::maxProfit_unlimit(vector<int> &A) {
 }
 
 /**
- * @brief Leet::numDistinctSubsequence
+ * @brief Leet::numDistinctSubsequence: Given a string S and a string T, count the number of distinct subsequences of S which equals T.
  * @param s: search long string
  * @param t: target
  * @return
@@ -3031,6 +3040,41 @@ int Leet::numDistinctSubsequence(string s, string t) {
 //        cout << endl;
 //    }
     return D.back().back();
+}
+
+int bst_search(vector<int> &A, int left, int right, int v) {
+    while (left+1<right) { // ???
+        int m = left + ((right-left)>>1);
+//        cout << left << " " << m << " " << right << endl;
+//        cin.get();
+        if (A[m]>=v)
+            right = m;
+        else
+            left = m;
+
+    }
+    return right;
+}
+
+int Leet::longestIncreaseSubsequence(const vector<int> &A){
+    vector<int> D;
+    for (auto &a: A) {
+        if (D.empty())
+            D.push_back(a);
+        else {
+            if (a>D.back())
+                D.push_back(a);
+            else {
+                int idx = bst_search(D, 0, D.size()-1, a);
+                D[idx] = a;
+//                auto i = lower_bound(D.begin(), D.end(), a);
+//                *i = a;
+            }
+        }
+
+    }
+    return D.size();
+
 }
 
 void Leet::connectLNodeRightNeighbor_completeTree(shared_ptr<TNode> &root) {
@@ -3156,6 +3200,21 @@ shared_ptr<Leet::TNode> Leet::buildTree_LNodeRightNeighbor2(const vector<int> &A
     return root;
 }
 
+void Leet::flattenBinaryTree_iterative(const shared_ptr<TNode> &root0) {
+    auto root=root0;
+    while (root) {
+        while(root->left) {
+            auto p = root->left;
+            while (p->right)
+                p = p->right;
+            p->right = root->right;
+            root->right = root->left;
+            root->left = nullptr;
+        }
+        root = root->right;
+    }
+}
+
 void Leet::flattenBinaryTree(shared_ptr<TNode> &root) {
     if (!root) return;
     if (root->left) flattenBinaryTree(root->left);
@@ -3182,14 +3241,13 @@ static void pathSum2_helper(shared_ptr<Leet::TNode> node, int k, vector<int> &cu
     if (!node->left && !node->right && sum==0) {
         ret.push_back(curr);
     }
-    if (node->left) pathSum2_helper(node->left, k-node->data, curr, ret);
-    if (node->right) pathSum2_helper(node->right, k-node->data, curr, ret);
+    if (node->left) pathSum2_helper(node->left, sum, curr, ret);
+    if (node->right) pathSum2_helper(node->right, sum, curr, ret);
     curr.pop_back();
 
 }
 
 vector<vector<int> > Leet::pathSum2(shared_ptr<TNode> root, int k) {
-    int sum=0;
     vector<vector<int> > ret;
     vector<int> curr;
     pathSum2_helper(root, k, curr, ret);
@@ -3276,6 +3334,7 @@ shared_ptr<Leet::TNode> convertPreorderListToBST_helper(shared_ptr<Leet::LNode> 
     return root;
 }
 
+// see another solution: using stack and from the end of Arr;
 shared_ptr<Leet::TNode> Leet::buildTreeFromSerializedArray(vector<string> &A) {
     if (A.empty())return nullptr;
     queue<shared_ptr<TNode> > Q;
@@ -3391,6 +3450,7 @@ static vector<shared_ptr<Leet::TNode> > uniqueBST2_helper(int s, int e) {
                 ret.push_back(n);
             }
     }
+    return ret;
 
 }
 
@@ -3638,7 +3698,7 @@ bool isanagram(string s0, string s1) {
 }
 
 bool Leet::isScrambleStrings(string s0, string s1) {
-    if (s0.empty() && s1.empty() || s0==s1) return true;
+    if (s0==s1) return true;
     if (s0.size()!=s1.size() || !isanagram(s0, s1))
         return false;
 
@@ -3795,6 +3855,37 @@ pair<shared_ptr<Leet::LNode>, shared_ptr<Leet::LNode> > reverseList_helper(share
     return {prev, head};
 }
 
+pair<shared_ptr<Leet::LNode>, shared_ptr<Leet::LNode> > reverseKGroup_helper(shared_ptr<Leet::LNode> &root) {
+    shared_ptr<Leet::LNode> curr=root, head=nullptr, tail=nullptr, prev=nullptr;
+    while (curr) {
+        auto next = curr->next;
+        if (!tail) tail = curr;
+        curr->next = head;
+        head = curr;
+        curr = next;
+    }
+    return {head, tail};
+}
+
+void Leet::reverseNodesKGroup_2(shared_ptr<LNode> &root, int k) {
+    if (!root) return;
+    shared_ptr<LNode> curr=root, head=nullptr, tail=nullptr, left=head, prev=head;
+    int m=0;
+    while (curr) {
+        m++;
+        prev = curr;
+        curr = curr->next;
+        if (m%k==0) {
+            prev->next = nullptr;
+            auto newlist = reverseKGroup_helper(left);
+            head ? tail->next = newlist.first : head = newlist.first;
+            tail = newlist.second;
+            left = curr;
+        }
+    }
+    root = head;
+}
+
 void Leet::reverseNodesKGroup(shared_ptr<LNode> &head, int k) {
     shared_ptr<LNode> curr=head, prev=nullptr, left=head, shortTail=nullptr;
     int m=0;
@@ -3817,6 +3908,21 @@ void Leet::reverseNodesKGroup(shared_ptr<LNode> &head, int k) {
             left=curr;
         }
     }
+}
+
+void Leet::swapNodesInPairs_2(shared_ptr<LNode> &head) {
+    shared_ptr<LNode> curr=head, prev;
+    int m=0;
+    while (curr) {
+        m++;
+        prev=curr;
+        curr=curr->next;
+        if (m%2==0) {
+            if (curr)
+                swap(curr->data, prev->data);
+        }
+    }
+
 }
 
 void Leet::swapNodesInPairs(shared_ptr<LNode> &head) {
@@ -3901,14 +4007,14 @@ shared_ptr<Leet::LNode> Leet::mergeKList(const vector<shared_ptr<LNode> > &A) {
         else
             head=top;
         tail=top;
-        if (tail->next)
+        if (top->next)
             Q.push(tail->next);
     }
     return head;
 
 }
 
-void generateParentheses_helper(string s, int left, int right, vector<string> &ret) {
+void generateParentheses_helper(string &s, int left, int right, vector<string> &ret) {
     if (right==0) {
         ret.push_back(s);
         return;
@@ -3933,7 +4039,8 @@ void generateParentheses_helper(string s, int left, int right, vector<string> &r
 
 vector<string> Leet::generateParentheses(int n) {
     vector<string> ret;
-    generateParentheses_helper(string(), n, n, ret);
+    string s;
+    generateParentheses_helper(s, n, n, ret);
     copy(ret.begin(), ret.end(), ostream_iterator<string>(cout, " "));
     cout << endl;
     return ret;
@@ -3974,13 +4081,15 @@ int Leet::trapRainWater(const vector<int> &A) {
             level=A[i];
             s.push(i);
         }
+        else if (A[i]==A[s.top()])
+            continue;
         else {
             int tmp = s.top();
             s.pop();
 //            if (i-tmp>1)
                 sum += (A[tmp]-level) * (i-tmp-1);
             level = A[tmp];
-            i--;
+            i--; // this is very important, so that we can layer by layer add water in the same i
         }
     }
     return sum;
@@ -4175,7 +4284,7 @@ vector<string> Leet::textJustify(vector<string> &A, int k) {
 
 int plusOne_helper(shared_ptr<Leet::LNode> &root) {
     if (!root)
-        return 1;
+        return 0;
     int ret = plusOne_helper(root->next);
     ret+= root->data;
     root->data = ret%10;
@@ -4468,7 +4577,7 @@ bool Leet::jumpGame(const vector<int> &A) {
     for (int i=0; i<A.size(); i++) {
         for (int j=1; j<=A[i]; j++) {
             if (i+j<A.size())
-                D[i+j] = D[i] || D[i+j];
+                D[i+j] = D[i] || D[i+j];   // jump from D[i] or no jump at all
         }
     }
     cout << D.back() << endl;
@@ -4481,7 +4590,7 @@ int Leet::jumpGame2(const vector<int> &A) {
     D[0]=0;
     for (int i=0; i<A.size(); i++) {
         for (int j=1; j<=A[i]; j++) {
-            if (i+j<A.size() && D[i+j]>D[i]+1) {
+            if (i+j<A.size() && D[i+j]>D[i]+1) { // harder to understand than the above one
                 D[i+j]=D[i]+1;
                 copy(D.begin(), D.end(), ostream_iterator<int>(cout, " "));
                 cout << endl;

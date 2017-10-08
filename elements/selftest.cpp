@@ -2136,3 +2136,228 @@ void Selftest::stableSort(vector<pair<int, string> > &A) {
         C.emplace_back(B[i].second, A[B[i].first].second);
     }
 }
+
+float Selftest::TossCoins_kHead(const vector<float> &P, int k){
+    vector<float> A(k+1, 0);
+    A[0] =1;
+    for (int i=1; i<=P.size(); i++) {
+        int p = P[i-1];
+        for (int j=k; j>=0; j--) {
+            A[j] = A[j] * (1-p) + j==0 ? 0: A[j-1] * p;
+        }
+    }
+    return A[k];
+}
+
+float Selftest::houseVote_majority(const vector<float> &P){
+    if (P.size()&1) return 0;
+    vector<float> A(P.size()+1, 0);
+    A[0]  =1;
+    for (int i=1; i<=P.size(); i++) {
+        int p = P[i-1];
+        for (int j=P.size(); j>=0; j--) {
+            A[j] = A[j] * (1-p) + j==0 ? 0: A[j-1] * p;
+        }
+    }
+    float sum=0;
+    for (int i=ceil(P.size()>>1)+1; i<=P.size(); i++)
+        sum += A[i];
+    return sum;
+
+}
+
+long Selftest::ties_election(const vector<int> &V){
+    int sum = accumulate(V.begin(), V.end(), 0);
+    if (sum&1) return 0;
+
+    vector<int> T(sum+1, 0) ;
+    T[0]=1;
+    for (int i=0; i<=V.size(); i++) {
+        for (int j=sum; j>=0; j--) {
+            T[j] = T[j] + (j-V[i])>=0 ? T[j-V[i]]: 0;
+        }
+    }
+    return T[sum>>1];
+
+}
+
+bool Selftest::regexMatch(const string &s, const regex e){
+    return regex_match(s, e);
+}
+
+void Selftest::regexSearch(const string &s0, const regex e){
+    smatch m;
+    string s(s0);
+    while (regex_search(s, m, e)) {
+        for (auto &x: m)
+            cout << x << " ";
+        cout << "end" << endl;
+        cin.get();
+        s = m.suffix().str();
+    }
+}
+
+void Selftest::printBizzBuzzGame(int n, int bizz, int buzz) {
+    cout << n << " " << bizz << " " << buzz << endl;
+    for (int i=1; i<=n; i++) {
+        int x = i%bizz;
+        int y = i%buzz;
+//        cout << x << " " << y << ": ";
+        if (x && y)
+            cout << i << endl;
+        else {
+            if (!x)
+                cout << "BIZZ" << " ";
+            if (!y)
+                cout << "BUZZ";
+            cout << endl;
+        }
+    }
+}
+
+bool Selftest::meetingConflict(vector<pair<int, int> > &A) {
+    sort(A.begin(), A.end(), [](const pair<int, int> &x, const pair<int, int> &y) {
+        return x.first < y.first;
+    });
+    int last = INT_MIN;
+    for (auto &a: A) {
+        if (a.first >last)
+            return true;
+        last = max(last, a.second);
+    }
+    return false;
+
+}
+
+static bool CompFun(const pair<int, int> &x, const pair<int, int> &y) {
+    return x.first < y.first;
+}
+
+bool Selftest::collision(vector<pair<int, int> > &A) {
+    vector<pair<int, int> > Place, Speed;
+    for (int i=0; i<A.size(); i++) {
+        Place.emplace_back(A[i].first, i);
+        Speed.emplace_back(A[i].second, i);
+    }
+    sort(Place.begin(), Place.end(), CompFun);
+    sort(Speed.begin(), Speed.end(), CompFun);
+    for (int i=0; i<Place.size(); i++) {
+        if (Place[i].second != Speed[i].second)
+            return true;
+    }
+    return false;
+}
+
+vector<int> convertColorInts(const string pixel){
+    vector<int> ans;
+    int start = 0;
+    while (start< pixel.size()) {
+        string s = pixel.substr(start, 8);
+        start += 8;
+        bitset<8> x(s);
+        ans.push_back(x.to_ulong());
+//        cout << s << ": " << x << ": " << x.to_ulong() << endl;
+    }
+    return ans;
+}
+
+string convertColorString(vector<int> &C) {
+    string ans;
+    for (auto &c: C) {
+        bitset<8> x(c);
+        ans += x.to_string();
+//        cout << c << ":" << x << ":" << ans << endl;
+    }
+    return ans;
+}
+
+void Selftest::closesetColor(const string pixel){
+    // define main colors: r,g,b,white,dark
+    vector<vector<int> > mainColors({{255, 0, 0}, {0, 255, 0}, {0, 0, 255}});
+    auto pixelColor = convertColorInts(pixel);
+    int closest = INT_MAX;
+    vector<int> idx;
+//    int idx=-1;
+    for (int i=0; i<mainColors.size(); i++) {
+        vector<int> color = mainColors[i];
+        int dist = 0;
+        for (int j=0; j<color.size(); j++){
+            int t = color[j]-pixelColor[j];
+            dist += t * t;
+        }
+        if (closest > dist) {
+            closest = dist;
+            idx.clear();
+            idx.push_back(i);
+        } else if (closest == dist) {
+            idx.push_back(i);
+        }
+    }
+    for (auto i: idx) {
+        cout << convertColorString(mainColors[i]) << endl;
+    }
+//    return convertColorString(mainColors[idx]);
+}
+
+// from netgear
+//size_t popSeed(vector<size_t>& seeds, map<size_t, double>& scores)
+//{
+//  size_t bestSeed = -1;
+//  double bestScore = 0;
+//  size_t bestSeedIdInSeedsVector = 0;
+
+//  for (size_t i = 0; i < seeds.size(); i++)
+//  {
+//    size_t seed = seeds[i];
+//    double score = scores[seed];
+//    if (scores[seed] > bestScore)
+//    {
+//      bestSeed = seed;
+//      bestScore = score;
+//      bestSeedIdInSeedsVector = i;
+//    }
+//  }
+
+//  if (bestScore < 0)
+//  {
+//    throw PMCException("Best seed should exist at this point");
+//  }
+
+//  seeds.erase(seeds.begin() + bestSeedIdInSeedsVector);
+
+//  return bestSeed;
+//}
+
+int Selftest::levinson_dist(string &s, string &t){
+    if (s.size()<t.size())
+        swap(s, t);
+    vector<int> A(t.size()+1, 0);
+    iota(A.begin(), A.end(), 0);
+
+    for (int i=1; i<=s.size(); i++ ){
+        int pre_0 = A[0];
+        A[0] = i;
+        for (int j=1; j<=t.size(); j++) {
+            int pre = A[j];
+            A[j] = s[i-1]==t[j-1] ? pre_0 : 1+ min(pre_0, min(A[j-1], A[j]));
+            pre_0 = pre;
+        }
+    }
+    return A.back();
+
+}
+
+int random_generator(int small, int large) {
+    return small+((large-small)>>1);
+}
+
+void helper(vector<int> &A, int idx) {
+    if (idx==A.size()) return;
+    int x = random_generator(idx, A.size()-1);
+    swap(A[idx], A[x]);
+    helper(A, idx+1);
+}
+
+void Selftest::random_permutation(vector<int> &A) {
+    helper(A, 0);
+}

@@ -324,7 +324,7 @@ int numberOfPaths(vector < vector < int > > a) {
     print2D(a);
     if (a.empty() || a[0][0]==0) return 0;
     vector<vector<int> > B(a.size(), vector<int>(a.front().size(), 0));
-    printf("%d-%d\n", B.size(), B.front().size());
+    printf("%d-%d\n", int(B.size()), int(B.front().size()));
     B[0][0]=1;
     print2D(B);
     for (int i=0; i<a.size(); i++) {
@@ -349,14 +349,26 @@ int numberOfPaths(vector < vector < int > > a) {
 
 int main(int argc, char **argv)
 {
-    vector<vector<int> > B;
-    B.emplace_back(vector<int>(2,1));
-    B.emplace_back(vector<int>(2,1));
-    cout << numberOfPaths(B) << endl;
-//    vector<string> A;
+    Leet D;
+    cout << D.numDistinctSubsequence(string(argv[1]), string(argv[2])) << endl;
+//    vector<int> A;
 //    for (int i=1; i<argc; i++) {
-//        A.emplace_back(string(argv[i]));
+//        A.emplace_back(atoi(argv[i]));
 //    }
+//    Leet D;
+//    cout << D.longestIncreaseSubsequence(A) << endl;
+
+//    Selftest::closesetColor(string(argv[1]));
+//    Selftest::printBizzBuzzGame(atoi(argv[1]), atoi(argv[2]), atoi(argv[3]));
+
+//    string s(argv[1]);
+//    regex e(argv[2]);
+//    cout << Selftest::regexMatch(s, e) << endl;
+
+//    vector<vector<int> > B;
+//    B.emplace_back(vector<int>(2,1));
+//    B.emplace_back(vector<int>(2,1));
+//    cout << numberOfPaths(B) << endl;
 
 //    Selftest::bigNumberSort(A);
 //    sort(A.begin(), A.end(), [](const string &a, const string &b){ return stoi(a)<stoi(b);});

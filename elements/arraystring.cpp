@@ -287,6 +287,7 @@ void ArrayString::convertPhoneNumberToString(string &num, string &s, vector<stri
     {
         s.push_back(t);
         convertPhoneNumberToString(num, s, result);
+        s.pop_back();
     }
 
 }
