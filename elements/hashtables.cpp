@@ -3,6 +3,7 @@
 #include <list>
 #include <unordered_map>
 #include <climits>
+#include <random>
 
 HashTables::HashTables()
 {

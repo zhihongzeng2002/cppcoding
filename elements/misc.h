@@ -7,6 +7,7 @@
 #include <memory>
 #include <mutex>
 #include <iostream>
+#include <cmath>
 
 using namespace std;
 

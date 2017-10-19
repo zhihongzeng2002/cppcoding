@@ -4,6 +4,7 @@
 #include <deque>
 #include <algorithm>
 #include <queue>
+#include <numeric>
 
 Discrete::Discrete()
 {

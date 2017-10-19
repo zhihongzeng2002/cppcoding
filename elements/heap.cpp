@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include <memory>
 #include <iterator>
+#include <random>
 
 Heap::Heap()
 {

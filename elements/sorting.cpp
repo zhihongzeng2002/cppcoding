@@ -5,6 +5,7 @@
 #include <iostream>
 #include <map>
 #include <iterator>
+#include <functional>
 
 Sorting::Sorting()
 {

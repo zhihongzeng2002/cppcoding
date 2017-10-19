@@ -12,6 +12,7 @@
 #include <climits>
 #include <set>
 #include <cassert>
+#include <numeric>
 
 static void merge(vector<int> &A, int s, int m, int e) {
 //    cout << "merge" << endl;

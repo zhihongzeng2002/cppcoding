@@ -227,6 +227,7 @@ struct TripleData {
     bool operator<(const TripleData & that) const {
         return val!=that.val ? val<that.val : arrIdx < that.arrIdx;
     }
+    TripleData(int _val, int _arrIdx, int _idx) : val(_val), arrIdx(_arrIdx), idx(_idx) {}
 };
 
 template<typename T>
@@ -448,7 +449,8 @@ TreeNode<T> * BST<T>::find_k_minBST(const unique_ptr<TreeNode<T> > &root, const 
 template<typename T>
 TreeNode<T> * BST<T>::find_first_larger_k_iterative(const unique_ptr<TreeNode<T> > &root, const T key) {
     if (!root) return nullptr;
-    auto * curr=root.get(), *first=nullptr;
+    auto curr=root.get();
+    TreeNode<T> * first=nullptr;
     bool found_k=false;
 
     while(curr) {

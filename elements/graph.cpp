@@ -6,6 +6,9 @@
 #include <cmath>
 #include <unordered_map>
 #include <algorithm>
+#include <stdlib.h>
+#include <numeric>
+#include <random>
 
 Graph::Graph()
 {

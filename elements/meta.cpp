@@ -9,6 +9,8 @@
 #include <stdexcept>
 #include <queue>
 #include <set>
+#include <numeric>
+
 //#include <unordered_set>
 
 atomic<int> Meta::Box::count(0);

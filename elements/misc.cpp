@@ -6,6 +6,7 @@
 #include <cstring>
 #include <climits>
 #include <list>
+#include <numeric>
 
 Misc::Misc()
 {

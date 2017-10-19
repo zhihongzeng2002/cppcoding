@@ -234,7 +234,7 @@ namespace Selftest
 
     void search_replace(string &s, vector<string> &r);
 
-    // from PathAI
+    // interview
     float TossCoins_kHead(const vector<float> &P, int k);
     // elememts: 20.8
     float houseVote_majority(const vector<float> &P);
@@ -261,7 +261,7 @@ namespace Selftest
 
     int levinson_dist(string &s, string &t);
 
-    // from google in 10/2017
+    // interview in 10/2017
     void random_permutation(vector<int> &A);
 }
 
