@@ -261,8 +261,78 @@ namespace Selftest
 
     int levinson_dist(string &s, string &t);
 
-    // interview in 10/2017
+    // interview in 10/3/2017
     void random_permutation(vector<int> &A);
+    void random_permutation_iterative(vector<int> &A);
+
+    // interview in 10/9/2017
+    class Robot{
+    public:
+        bool advance(){}
+        bool reverse(){}
+        void moveLeft(){}
+        void moveRight(){}
+
+    };
+    // given a above robot class, clean the room
+    void CleaningRoom(vector<vector<bool> > &M, Robot &R);
+    // find the k-length repeat sub array in the list of array
+    pair<pair<int, int>, pair<int, int> > findRepeatSubArray(vector<vector<string> > &A, int k);
+    // find the pure string (not tag and attribute) in the html string
+    string find_string_html(const string &S);
+    // check if the pure strings in two html (which are trees from the parser) are equal
+    bool isEqualStringInHtml(const TNode* x, const TNode *b);
+
+    // iterative inorder tranverse
+    struct GTNode {
+        int data;
+        GTNode *left, *right;
+    };
+
+    void in_rrder_iterative(GTNode *root);
+
+    class Inorder {
+    public:
+        Inorder(GTNode *root);
+        bool isNext();
+        void next();
+    private:
+        GTNode *curr;
+        stack<GTNode*> S;
+    };
+
+    // interview 10/12/2017
+    //Game worm
+    struct hashFunc{
+        int operator()(const pair<int, int> &x) const {
+            return hash<int>()(x.first) ^ hash<int>()(x.second);
+        }
+    };
+
+    class WormGame {
+        int w, h; //map size
+        list<pair<int, int> > worm;
+        unordered_set<pair<int, int>,  hashFunc> T; //table to check collision
+        int step;
+    public:
+        WormGame(int _w, int _h) : w(_w), h(_h), step(0) {}
+        // update worm and check whether the game is over (collision, true). And every 10 step, the worm increase one cell
+        bool update(int y, int x) {
+            pair<int, int> cell(y, x);
+            if (T.find(cell) != T.end())
+                return true;
+            worm.push_front(cell);
+            T.emplace(cell);
+            if (!(step % 10)) {
+                T.erase(worm.back());
+                worm.pop_back();
+            }
+            return false;
+        }
+    };
+
+    // in the 2D coordinate, with a certain angle from the origin, find the start angle which cover the largest points
+    float findLargestPointsWithinAngle(const vector<pair<float, float> > &A, float angle);
 }
 
 

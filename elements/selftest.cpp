@@ -2362,3 +2362,116 @@ void helper(vector<int> &A, int idx) {
 void Selftest::random_permutation(vector<int> &A) {
     helper(A, 0);
 }
+
+void Selftest::random_permutation_iterative(vector<int> &A) {
+    for (int i=0; i<A.size(); i++) {
+        int x = random_generator(i, A.size()-1);
+        swap(A[i], A[x]);
+    }
+}
+
+bool cleaning_helper(vector<vector<bool> > &M, Selftest::Robot &R, int numDirtyCell, pair<int, int> curr) {
+    vector<pair<int, int> > D({{0, 1}, {1, 0}, {0, -1}, {-1, 0}});
+    if (M[curr.first][curr.second])
+        return false;
+    M[curr.first][curr.second] = true;
+    numDirtyCell--;
+    int didx = 0; //curr: current position, d: current robot face direction.
+    while (numDirtyCell>0) {
+        pair<int, int> d = D[didx];
+        if (R.advance()) {
+            curr.first += d.first;
+            curr.second += d.second;
+            if (!M[curr.first][curr.second]) {
+                M[curr.first][curr.second]=true;
+                numDirtyCell--;
+            }
+        } else if (R.reverse()) {
+            curr.first -= d.first;
+            curr.second -= d.second;
+            if (!M[curr.first][curr.second]) {
+                M[curr.first][curr.second]=true;
+                numDirtyCell--;
+            }
+        } else {
+            R.moveRight();
+            didx = (didx + 1) % 4;
+        }
+    }
+    return true;
+}
+
+/**
+ * @brief Selftest::ClearingRoom
+ * @param M 2D vector of Map. false:to be cleaned, true: cleaned or obstacle
+ * @param R Robot
+ */
+void Selftest::CleaningRoom(vector<vector<bool> > &M, Robot &R){
+    // the number of cell needed cleaning
+    int numDirtyCell = 0;
+    for (int i=0; i<M.size(); i++) {
+        for (int j=0; j<M[i].size(); j++) {
+            if (!M[i][j])
+                numDirtyCell++;
+        }
+    }
+    if (!numDirtyCell) return;
+
+    // try each possible starting position
+    for (int i=0; i<M.size(); i++) {
+        for (int j=0; j<M[i].size(); j++) {
+            if (cleaning_helper(M, R, numDirtyCell, pair<int, int>(i, j)) )
+                return;
+        }
+    }
+}
+
+#define PI 3.14159265
+
+vector<float> convertAngle(const vector<pair<float, float> > &A) {
+    vector<float> ans;
+    for (auto &a: A) {
+        float t=0;
+        if (!a.second){
+            t=PI/2;
+            if (a.first<0)
+                t=-t;
+        } else
+            t = atan(a.first/a.second);
+        ans.push_back(t);
+    }
+    return vector<float>();
+}
+
+float Selftest::findLargestPointsWithinAngle(const vector<pair<float, float> > &A, float angle) {
+    vector<float> B = convertAngle(A);
+    sort(B.begin(), B.end(), [](const float &x, const float &y){ return x<y;});
+    vector<float> C(B);
+    for (auto &c: C)
+        c += 2*PI;
+    B.insert(B.end(), C.begin(), C.end());
+    pair<float, float> maxv(-1, -1), curr; // first is the index of start angle, second is the max number of points
+    for (int i=0; i<B.size(); i++) {
+        if (!i){
+            curr = {0, 1};
+            maxv = curr;
+            continue;
+        }
+
+        if (B[i]-B[curr.first] <= angle) {
+            curr.second++;
+        } else {
+            if (maxv.second < curr.second) {
+                maxv = curr;
+            }
+            curr.second++ ;
+            while (B[i] - B[curr.first] > angle ) {
+                curr.first++;
+                curr.second--;
+            }
+        }
+    }
+    if (maxv.second < curr.second)
+        maxv = curr;
+    return B[maxv.first];
+}
